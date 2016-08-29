@@ -1,0 +1,30 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1"
+    meta name="description" content=""
+    meta name="author" content=""
+
+    title Hello Rumbl!
+    link rel="stylesheet" href=static_path(@conn,"/css/app.css")
+  body
+    div class="container"
+      header class="header"
+        nav role="navigation"
+          ol class="breadcrumb text-right"
+            = if @current_user do
+              li= @current_user.username
+              li= link 'Log out', to: session_path(@conn, :delete, @current_user), method: "delete"
+            - else
+              li= link 'Register', to: user_path(@conn, :new)
+              li= link 'Log in', to: session_path(@conn, :new)
+        span class="logo"
+      p class="alert alert-info" role="alert" = get_flash(@conn, :info)
+      p class="alert alert-danger" role="alert" = get_flash(@conn, :error)
+      main role="main"
+        = render @view_module, @view_template, assigns
+    / script src=static_path(@conn,"/js/token.js")
+    = render "token.html", token: assigns[:user_token]
+    script src=static_path(@conn,"/js/app.js")
